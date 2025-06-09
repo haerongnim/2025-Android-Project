@@ -1,0 +1,62 @@
+# Android Studio
+.idea/
+.gradle/
+local.properties
+.DS_Store
+captures/
+.externalNativeBuild/
+
+# Build output
+build/
+*/build/
+
+# Kotlin/Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Signing files
+*.jks
+*.keystore
+
+# Generated files
+gen/
+out/
+bin/
+
+# OS files
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Crashlytics
+fabric.properties
+
+# Google Services
+google-services.json
+firebase-debug.log
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+
+# Log files
+*.log
+
+# Gradle
+.gradle/
+gradle-app.setting
+
+# NDK
+.cxx/
+
+# Packaging
+*.ap_
+*.apk
+*.apks
+*.aab
+
+# Misc
+*.swp
