@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
 import com.wingwing.spendy.ocr.data.OCRRequest
 import com.wingwing.spendy.ocr.network.OcrApiProvider
 import kotlinx.coroutines.launch
@@ -90,7 +91,7 @@ fun OcrScreen() {
         } else if (ocrResult != null) {
             Text("인식 결과:", style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(ocrResult ?: "", style = MaterialTheme.typography.bodyMedium)
+            Text(ocrResult ?: "", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
         }
     }
 }
