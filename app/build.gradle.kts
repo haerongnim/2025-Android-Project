@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("org.jetbrains.kotlin.kapt")
+    id("com.google.gms.google-services") version "4.4.1"
 }
 
 android {
@@ -58,7 +59,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
+// build.gradle.kts에 의존성 추가
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
@@ -73,5 +75,10 @@ dependencies {
     // CLOVA OCR (직접 HTTP multipart 요청)
     // Room DB
     implementation("androidx.room:room-runtime:2.6.0")
+
+
+    implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx")
 
 }

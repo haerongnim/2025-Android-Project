@@ -12,4 +12,5 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
     object History : Screen("history", "내역", Icons.Default.List)
     object Chart : Screen("chart", "통계", Icons.Default.PieChart)
     object Friends : Screen("friends", "친구", Icons.Default.Group)
+    object Ocr : Screen("ocr", "OCR", Icons.Default.List)
 }

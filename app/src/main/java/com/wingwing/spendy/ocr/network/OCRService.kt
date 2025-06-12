@@ -12,6 +12,6 @@ interface OCRService {
         "Content-Type: application/json; charset=UTF-8",
         "X-OCR-SECRET: SkVCTmtHd1VFR2VHam9LYW5IeUNiWFdRUUVXU0JkZ0Y="
     )
-    @POST("api/v1/ocr/receipt")
+    @POST("receipt")
     suspend fun requestOCR(@Body request: OCRRequest): Response<OCRResponse>
 }

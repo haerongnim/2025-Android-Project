@@ -56,10 +56,11 @@ fun SpendyApp() {
             startDestination = Screen.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Screen.Home.route) { HomeScreen() }
+            composable(Screen.Home.route) { HomeScreen(navController) }
             composable(Screen.History.route) { HistoryScreen() }
             composable(Screen.Chart.route) { ChartScreen() }
             composable(Screen.Friends.route) { FriendsScreen() }
+            composable(Screen.Ocr.route) { com.wingwing.spendy.ocr.ui.OcrScreen() }
         }
     }
 }

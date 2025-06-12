@@ -38,11 +38,11 @@ fun OcrScreen() {
 
             val request = OCRRequest(
                 images = listOf(OCRRequest.Image(
-                    format = "png",
-                    name = "spendy_receipt",
+                    format = "jpeg",
+                    name = "spendy_receipt.jpg",
                     data = base64
-                )),
-                version = "V1" // ← v1 엔드포인트와 맞춤!
+                ))
+//                version = "v1" // ← v1 엔드포인트와 맞춤!
             )
 
             val gson = Gson()
@@ -59,7 +59,8 @@ fun OcrScreen() {
 
                         ocrResult = resultText ?: "텍스트 없음"
                     } else {
-                        ocrResult = "서버 응답 오류: ${response.code()}"
+                        val errorMsg = response.errorBody()?.string()
+                        ocrResult = "서버 응답 오류: ${response.code()}\n${errorMsg ?: ""}"
                     }
                 } catch (e: Exception) {
                     Log.e("OCR", "에러 발생", e)
