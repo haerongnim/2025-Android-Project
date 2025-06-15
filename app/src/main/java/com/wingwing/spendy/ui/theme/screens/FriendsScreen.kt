@@ -1,5 +1,5 @@
 package com.wingwing.spendy.ui.theme.screens
-
+import com.wingwing.spendy.ui.theme.Yellow40
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
