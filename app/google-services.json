@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "466262802482",
+    "project_id": "spendy-7d11d",
+    "storage_bucket": "spendy-7d11d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:466262802482:android:8c7a5333ce8bd47c8f3c2b",
+        "android_client_info": {
+          "package_name": "com.example.spendy_2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtZLxwUZc81pHWCQxPt332PGqtpfl7lpY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
