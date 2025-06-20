@@ -26,6 +26,10 @@ import java.io.FileOutputStream
 import org.json.JSONObject
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
 
@@ -42,7 +46,10 @@ class HomeFragment : Fragment() {
         val store: String = "",
         val items: List<ReceiptItem> = emptyList(),
         val totalAmount: Int = 0,
-        val date: Long = System.currentTimeMillis()
+        val date: Long = System.currentTimeMillis(),
+        val address: String = "",
+        val lat: Double = 0.0, // 위도
+        val lng: Double = 0.0  // 경도
     )
     // 임시 저장 리스트
     private val receiptList = mutableListOf<ReceiptInfo>()
@@ -242,6 +249,12 @@ class HomeFragment : Fragment() {
                         val storeInfo = result?.optJSONObject("storeInfo")
                         val nameObj = storeInfo?.optJSONObject("name")
                         parsedStore = nameObj?.optString("text", "") ?: ""
+                        // 주소
+                        val addressesArr = storeInfo?.optJSONArray("addresses")
+                        var parsedAddress = ""
+                        if (addressesArr != null && addressesArr.length() > 0) {
+                            parsedAddress = addressesArr.getJSONObject(0).optString("text", "")
+                        }
                         // 날짜
                         val paymentInfo = result?.optJSONObject("paymentInfo")
                         val dateObj = paymentInfo?.optJSONObject("date")
@@ -279,39 +292,102 @@ class HomeFragment : Fragment() {
                             }
                         }
                         parsedItems = itemList
+                        // 주소 → 좌표 변환 (코루틴 launch)
+                        if (parsedAddress.isNotBlank()) {
+                            GlobalScope.launch(Dispatchers.Main) {
+                                // 실제 Geocoding API 사용 (정확한 위치)
+                                val (lat, lng) = kotlinx.coroutines.withContext(Dispatchers.IO) {
+                                    getLatLngFromAddress(parsedAddress)
+                                }
+                                
+                                // Geocoding 실패 시 테스트용 좌표 사용
+                                val finalLat = if (lat == 0.0 && lng == 0.0) {
+                                    getTestLatLngFromAddress(parsedAddress).first
+                                } else lat
+                                val finalLng = if (lat == 0.0 && lng == 0.0) {
+                                    getTestLatLngFromAddress(parsedAddress).second
+                                } else lng
+                                
+                                val receiptInfo = ReceiptInfo(
+                                    store = parsedStore,
+                                    items = parsedItems,
+                                    totalAmount = parsedTotal,
+                                    date = parsedDate,
+                                    address = parsedAddress,
+                                    lat = finalLat,
+                                    lng = finalLng
+                                )
+                                saveReceiptToFirestore(receiptInfo)
+                                // 예쁘게 포맷팅
+                                val sb = StringBuilder()
+                                sb.appendLine("[영수증 인식 결과]")
+                                sb.appendLine()
+                                sb.appendLine("가게명: ${if (parsedStore.isNotBlank()) parsedStore else "-"}")
+                                sb.appendLine("날짜: ${if (dateStrForDisplay.isNotBlank()) dateStrForDisplay else "-"}")
+                                sb.appendLine("총액: ${if (parsedTotal > 0) String.format("%,d원", parsedTotal) else "-"}")
+                                sb.appendLine("주소: ${if (parsedAddress.isNotBlank()) parsedAddress else "-"}")
+                                sb.appendLine("위도: $finalLat, 경도: $finalLng")
+                                if (lat == 0.0 && lng == 0.0) {
+                                    sb.appendLine("(Geocoding 실패로 테스트 좌표 사용)")
+                                } else {
+                                    sb.appendLine("(정확한 Geocoding 좌표)")
+                                }
+                                sb.appendLine()
+                                sb.appendLine("[구매 품목]")
+                                if (parsedItems.isNotEmpty()) {
+                                    parsedItems.forEach {
+                                        sb.appendLine("- ${it.name}  ${if (it.price > 0) String.format("%,d원", it.price) else "-"}")
+                                    }
+                                } else {
+                                    sb.appendLine("(품목 정보 없음)")
+                                }
+                                MaterialAlertDialogBuilder(requireContext())
+                                    .setTitle("영수증 인식 결과 및 저장 완료")
+                                    .setMessage(sb.toString() + "\n\n[JSON 원문]\n" + clovaResult)
+                                    .setPositiveButton("확인", null)
+                                    .show()
+                            }
+                            return@runClovaOcrRest
+                        }
+                        // 주소가 없으면 기존 방식
+                        val receiptInfo = ReceiptInfo(
+                            store = parsedStore,
+                            items = parsedItems,
+                            totalAmount = parsedTotal,
+                            date = parsedDate,
+                            address = parsedAddress,
+                            lat = 0.0,
+                            lng = 0.0
+                        )
+                        saveReceiptToFirestore(receiptInfo)
+                        // 예쁘게 포맷팅
+                        val sb = StringBuilder()
+                        sb.appendLine("[영수증 인식 결과]")
+                        sb.appendLine()
+                        sb.appendLine("가게명: ${if (parsedStore.isNotBlank()) parsedStore else "-"}")
+                        sb.appendLine("날짜: ${if (dateStrForDisplay.isNotBlank()) dateStrForDisplay else "-"}")
+                        sb.appendLine("총액: ${if (parsedTotal > 0) String.format("%,d원", parsedTotal) else "-"}")
+                        sb.appendLine("주소: ${if (parsedAddress.isNotBlank()) parsedAddress else "-"}")
+                        sb.appendLine("위도: 0.0, 경도: 0.0")
+                        sb.appendLine()
+                        sb.appendLine("[구매 품목]")
+                        if (parsedItems.isNotEmpty()) {
+                            parsedItems.forEach {
+                                sb.appendLine("- ${it.name}  ${if (it.price > 0) String.format("%,d원", it.price) else "-"}")
+                            }
+                        } else {
+                            sb.appendLine("(품목 정보 없음)")
+                        }
+                        MaterialAlertDialogBuilder(requireContext())
+                            .setTitle("영수증 인식 결과 및 저장 완료")
+                            .setMessage(sb.toString() + "\n\n[JSON 원문]\n" + clovaResult)
+                            .setPositiveButton("확인", null)
+                            .show()
+                        return@runClovaOcrRest
                     }
                 } catch (e: Exception) {
                     // 파싱 실패 시 무시하고 기본값 사용
                 }
-                // Firestore에 저장
-                val receiptInfo = ReceiptInfo(
-                    store = parsedStore,
-                    items = parsedItems,
-                    totalAmount = parsedTotal,
-                    date = parsedDate
-                )
-                saveReceiptToFirestore(receiptInfo)
-                // 예쁘게 포맷팅
-                val sb = StringBuilder()
-                sb.appendLine("[영수증 인식 결과]")
-                sb.appendLine()
-                sb.appendLine("가게명: ${if (parsedStore.isNotBlank()) parsedStore else "-"}")
-                sb.appendLine("날짜: ${if (dateStrForDisplay.isNotBlank()) dateStrForDisplay else "-"}")
-                sb.appendLine("총액: ${if (parsedTotal > 0) String.format("%,d원", parsedTotal) else "-"}")
-                sb.appendLine()
-                sb.appendLine("[구매 품목]")
-                if (parsedItems.isNotEmpty()) {
-                    parsedItems.forEach {
-                        sb.appendLine("- ${it.name}  ${if (it.price > 0) String.format("%,d원", it.price) else "-"}")
-                    }
-                } else {
-                    sb.appendLine("(품목 정보 없음)")
-                }
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("영수증 인식 결과 및 저장 완료")
-                    .setMessage(sb.toString() + "\n\n[JSON 원문]\n" + clovaResult)
-                    .setPositiveButton("확인", null)
-                    .show()
             }
         } catch (e: Exception) {
             Toast.makeText(context, "이미지 처리 오류: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
@@ -378,6 +454,118 @@ class HomeFragment : Fragment() {
                 receiptAdapter.updateData(emptyList())
                 binding.tvMonthlyTotal.text = "₩0"
             }
+    }
+
+    // 카카오 Geocoding API를 이용해 주소를 위도/경도로 변환하는 함수
+    private suspend fun getLatLngFromAddress(address: String): Pair<Double, Double> {
+        return try {
+            val apiKey = "KakaoAK a43aa2abb1d988b7e8c15c509e791f3a"
+            val url = "https://dapi.kakao.com/v2/local/search/address.json?query=" +
+                java.net.URLEncoder.encode(address, "UTF-8")
+            val request = okhttp3.Request.Builder()
+                .url(url)
+                .addHeader("Authorization", apiKey)
+                .build()
+            val client = okhttp3.OkHttpClient()
+            val response = client.newCall(request).execute()
+            val body = response.body?.string() ?: return 0.0 to 0.0
+
+            android.util.Log.d("KakaoGeocoding", "주소: $address\n요청 URL: $url\n응답: $body")
+
+            val json = org.json.JSONObject(body)
+            val documents = json.optJSONArray("documents")
+            if (documents != null && documents.length() > 0) {
+                val doc = documents.getJSONObject(0)
+                val lat = doc.optString("y", "0.0").toDoubleOrNull() ?: 0.0
+                val lng = doc.optString("x", "0.0").toDoubleOrNull() ?: 0.0
+                android.util.Log.d("KakaoGeocoding", "파싱된 위도: $lat, 경도: $lng")
+                return lat to lng
+            }
+            0.0 to 0.0
+        } catch (e: Exception) {
+            android.util.Log.e("KakaoGeocoding", "Geocoding 실패: ${e.localizedMessage}", e)
+            0.0 to 0.0
+        }
+    }
+
+    // 테스트용 좌표 반환 함수 (더 정확한 주소 매칭)
+    private fun getTestLatLngFromAddress(address: String): Pair<Double, Double> {
+        // 주소에 따라 더 정확한 테스트 좌표 반환
+        return when {
+            // 부산 지역
+            address.contains("부산") && address.contains("금정구") -> 35.2429 to 129.0929  // 금정구 중심
+            address.contains("부산") && address.contains("해운대구") -> 35.1630 to 129.1630  // 해운대구 중심
+            address.contains("부산") && address.contains("동래구") -> 35.2055 to 129.0785  // 동래구 중심
+            address.contains("부산") && address.contains("부산진구") -> 35.1627 to 129.0532  // 부산진구 중심
+            address.contains("부산") -> 35.1796 to 129.0756  // 부산 중심
+            
+            // 서울 지역
+            address.contains("서울") && address.contains("강남구") -> 37.4980 to 127.0276  // 강남구 중심
+            address.contains("서울") && address.contains("서초구") -> 37.4837 to 127.0324  // 서초구 중심
+            address.contains("서울") && address.contains("마포구") -> 37.5572 to 126.9254  // 마포구 중심
+            address.contains("서울") && address.contains("중구") -> 37.5636 to 126.9834  // 중구 중심
+            address.contains("서울") && address.contains("용산구") -> 37.5384 to 126.9654  // 용산구 중심
+            address.contains("서울") -> 37.5665 to 126.9780  // 서울 중심
+            
+            // 대구 지역
+            address.contains("대구") && address.contains("중구") -> 35.8714 to 128.6014  // 대구 중구
+            address.contains("대구") && address.contains("동구") -> 35.8860 to 128.6320  // 대구 동구
+            address.contains("대구") -> 35.8714 to 128.6014  // 대구 중심
+            
+            // 인천 지역
+            address.contains("인천") && address.contains("미추홀구") -> 37.4563 to 126.7052  // 인천 미추홀구
+            address.contains("인천") && address.contains("연수구") -> 37.4100 to 126.6780  // 인천 연수구
+            address.contains("인천") -> 37.4563 to 126.7052  // 인천 중심
+            
+            // 광주 지역
+            address.contains("광주") && address.contains("서구") -> 35.1595 to 126.8526  // 광주 서구
+            address.contains("광주") && address.contains("동구") -> 35.1460 to 126.9230  // 광주 동구
+            address.contains("광주") -> 35.1595 to 126.8526  // 광주 중심
+            
+            // 대전 지역
+            address.contains("대전") && address.contains("중구") -> 36.3504 to 127.3845  // 대전 중구
+            address.contains("대전") && address.contains("유성구") -> 36.3620 to 127.3560  // 대전 유성구
+            address.contains("대전") -> 36.3504 to 127.3845  // 대전 중심
+            
+            // 울산 지역
+            address.contains("울산") && address.contains("남구") -> 35.5384 to 129.3114  // 울산 남구
+            address.contains("울산") && address.contains("동구") -> 35.5040 to 129.4160  // 울산 동구
+            address.contains("울산") -> 35.5384 to 129.3114  // 울산 중심
+            
+            // 세종 지역
+            address.contains("세종") -> 36.4800 to 127.2890  // 세종 중심
+            
+            // 특정 지역 키워드
+            address.contains("강남") -> 37.4980 to 127.0276  // 강남역
+            address.contains("홍대") -> 37.5572 to 126.9254  // 홍대입구역
+            address.contains("명동") -> 37.5636 to 126.9834  // 명동
+            address.contains("동대문") -> 37.5663 to 127.0097  // 동대문
+            address.contains("잠실") -> 37.5139 to 127.1006  // 잠실역
+            address.contains("강남역") -> 37.4980 to 127.0276  // 강남역
+            address.contains("홍대입구") -> 37.5572 to 126.9254  // 홍대입구역
+            address.contains("잠실역") -> 37.5139 to 127.1006  // 잠실역
+            
+            else -> {
+                // 주소에서 시/도 정보 추출하여 대략적인 위치 반환
+                val city = when {
+                    address.contains("부산") -> 35.1796 to 129.0756
+                    address.contains("서울") -> 37.5665 to 126.9780
+                    address.contains("대구") -> 35.8714 to 128.6014
+                    address.contains("인천") -> 37.4563 to 126.7052
+                    address.contains("광주") -> 35.1595 to 126.8526
+                    address.contains("대전") -> 36.3504 to 127.3845
+                    address.contains("울산") -> 35.5384 to 129.3114
+                    address.contains("세종") -> 36.4800 to 127.2890
+                    else -> {
+                        // 한국 내 랜덤 좌표 (더 현실적인 범위)
+                        val randomLat = 35.0 + (Math.random() * 5.0)  // 35.0 ~ 40.0
+                        val randomLng = 126.0 + (Math.random() * 5.0)  // 126.0 ~ 131.0
+                        randomLat to randomLng
+                    }
+                }
+                city
+            }
+        }
     }
 
     override fun onDestroyView() {

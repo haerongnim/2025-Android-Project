@@ -26,8 +26,8 @@
         
         <!-- 네이버 지도 API 키 -->
         <meta-data
-            android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="YOUR_NAVER_MAP_CLIENT_ID" />
+            android:name="com.naver.maps.map.NCP_KEY_ID"
+            android:value="mvrytyh5yq" />
         
         <activity
             android:name=".MainActivity"
