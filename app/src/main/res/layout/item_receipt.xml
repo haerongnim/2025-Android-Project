@@ -31,4 +31,14 @@
         android:text="2024-01-01"
         android:textSize="13sp"
         android:gravity="end" />
+
+    <ImageButton
+        android:id="@+id/btn_delete_receipt"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center_vertical"
+        android:background="@android:color/transparent"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:contentDescription="삭제"
+        android:tint="@android:color/darker_gray" />
 </LinearLayout> 

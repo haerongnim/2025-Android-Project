@@ -80,10 +80,6 @@ dependencies {
     implementation(libs.camerax.lifecycle)
     implementation(libs.camerax.view)
     
-    // ML Kit for OCR
-    implementation(libs.mlkit.text.recognition)
-    implementation("com.google.mlkit:text-recognition:16.0.0")
-    
     // Naver Map
     implementation(libs.naver.map)
     

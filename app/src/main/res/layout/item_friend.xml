@@ -78,15 +78,13 @@
 
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/btn_chat"
-            android:layout_width="40dp"
+        <Button
+            android:id="@+id/btn_add_friend"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="12dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_chat"
-            tools:ignore="ContentDescription" />
+            android:text="추가" />
 
     </LinearLayout>
 

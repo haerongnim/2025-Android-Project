@@ -125,7 +125,7 @@ class StatisticsFragment : Fragment() {
                 cal.timeInMillis = it.date
                 cal.get(java.util.Calendar.MONTH) + 1 // 1~12월
             }.mapValues { entry ->
-                entry.value.map { it.amount.toFloatOrNull() ?: 0f }.sum()
+                entry.value.map { it.totalAmount.toFloat() }.sum()
             }
             (1..12).forEach { month ->
                 val value = monthlyMap[month] ?: 0f
@@ -168,7 +168,7 @@ class StatisticsFragment : Fragment() {
                     r.store.contains("영화") || r.store.contains("노래방") -> "엔터테인먼트"
                     else -> "기타"
                 }
-                val amt = r.amount.toFloatOrNull() ?: 0f
+                val amt = r.totalAmount.toFloat()
                 categoryMap[cat] = categoryMap.getOrDefault(cat, 0f) + amt
             }
             categoryMap.forEach { (cat, amt) ->
