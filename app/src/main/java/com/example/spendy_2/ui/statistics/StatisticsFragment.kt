@@ -125,7 +125,7 @@ class StatisticsFragment : Fragment() {
                 cal.timeInMillis = it.date
                 cal.get(java.util.Calendar.MONTH) + 1 // 1~12월
             }.mapValues { entry ->
-                entry.value.sumOf { it.amount.toFloatOrNull() ?: 0f }
+                entry.value.map { it.amount.toFloatOrNull() ?: 0f }.sum()
             }
             (1..12).forEach { month ->
                 val value = monthlyMap[month] ?: 0f
