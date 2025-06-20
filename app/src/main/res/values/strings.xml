@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">Spendy</string>
+    
+    <!-- Navigation -->
+    <string name="title_home">홈</string>
+    <string name="title_map">지도</string>
+    <string name="title_statistics">통계</string>
+    <string name="title_friends">친구</string>
+    
+    <!-- Home Fragment -->
+    <string name="receipt_scan">영수증 스캔</string>
+    <string name="camera_permission_required">카메라 권한이 필요합니다</string>
+    <string name="recent_transactions">최근 거래내역</string>
+    <string name="total_spent">총 지출</string>
+    <string name="this_month">이번 달</string>
+    
+    <!-- Map Fragment -->
+    <string name="map_title">지출 지도</string>
+    <string name="no_location_data">위치 데이터가 없습니다</string>
+    
+    <!-- Statistics Fragment -->
+    <string name="statistics_title">소비 통계</string>
+    <string name="monthly_expense">월별 지출</string>
+    <string name="category_breakdown">카테고리별 분석</string>
+    
+    <!-- Friends Fragment -->
+    <string name="friends_title">친구 목록</string>
+    <string name="add_friend">친구 추가</string>
+    <string name="search_friends">친구 검색</string>
+    <string name="chat">채팅</string>
+    
+    <!-- Common -->
+    <string name="ok">확인</string>
+    <string name="cancel">취소</string>
+    <string name="save">저장</string>
+    <string name="delete">삭제</string>
+    <string name="edit">편집</string>
+</resources>
