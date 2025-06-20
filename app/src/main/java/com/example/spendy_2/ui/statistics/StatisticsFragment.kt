@@ -108,10 +108,9 @@ class StatisticsFragment : Fragment() {
             }
     }
 
-    private fun loadMonthlyExpenseData(receipts: List<ReceiptInfo>?) {
+    private fun loadMonthlyExpenseData(receipts: List<ReceiptInfo>) {
         val entries = mutableListOf<Entry>()
-        val safeReceipts = receipts ?: emptyList()
-        if (safeReceipts.isEmpty()) {
+        if (receipts.isEmpty()) {
             // 임시 데이터
             entries.add(Entry(1f, 150000f))
             entries.add(Entry(2f, 180000f))
@@ -121,12 +120,12 @@ class StatisticsFragment : Fragment() {
             entries.add(Entry(6f, 140000f))
         } else {
             // 월별 합계 계산
-            val monthlyMap = safeReceipts.groupBy {
+            val monthlyMap = receipts.groupBy {
                 val cal = java.util.Calendar.getInstance()
                 cal.timeInMillis = it.date
                 cal.get(java.util.Calendar.MONTH) + 1 // 1~12월
             }.mapValues { entry ->
-                entry.value.sumOf { it.amount?.toDoubleOrNull() ?: 0.0 }.toFloat()
+                entry.value.sumOf { it.amount.toFloatOrNull() ?: 0f }
             }
             (1..12).forEach { month ->
                 val value = monthlyMap[month] ?: 0f
