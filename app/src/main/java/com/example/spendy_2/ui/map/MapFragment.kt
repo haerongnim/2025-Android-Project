@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.spendy_2.R
 import com.example.spendy_2.databinding.FragmentMapBinding
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
@@ -131,11 +133,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         marker.map = naverMap
                         marker.captionText = info.store
                         marker.subCaptionText = "총액: ${info.totalAmount}원"
+                        marker.tag = doc.id // 마커의 tag에 문서 ID 저장
                         
-                        // 영수증 마커 클릭 이벤트
+                        // 영수증 마커 클릭 이벤트 - 거래 상세 페이지로 이동
                         marker.onClickListener = Overlay.OnClickListener {
-                            val message = "${info.store}\n총액: ${info.totalAmount}원\n날짜: ${info.date}"
-                            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+                            navigateToTransactionDetail(it.tag as String)
                             true
                         }
                         
@@ -152,6 +154,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 // 실패 시 메시지 표시
                 binding.tvNoData.visibility = View.VISIBLE
             }
+    }
+
+    // 거래 상세 페이지로 이동
+    private fun navigateToTransactionDetail(transactionId: String) {
+        val bundle = Bundle().apply {
+            putString("transaction_id", transactionId)
+        }
+        
+        findNavController().navigate(
+            R.id.navigation_transaction_detail,
+            bundle
+        )
     }
 
     override fun onStart() {

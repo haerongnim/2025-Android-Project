@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/chat_friend_bubble"
+        android:padding="12dp"
+        android:maxWidth="280dp"
+        android:minWidth="60dp">
+
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="친구 메시지"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:lineSpacingExtra="2dp" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_gravity="start"
+            android:text="12:34"
+            android:textColor="@color/gray"
+            android:textSize="11sp" />
+
+    </LinearLayout>
+
+</LinearLayout> 

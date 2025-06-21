@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background">
+
+    <!-- 상단 헤더 -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient_background">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_back"
+                android:background="@drawable/circle_background"
+                android:backgroundTint="@color/white"
+                android:tint="#2196F3"
+                android:scaleType="center"
+                android:layout_gravity="start"
+                android:contentDescription="뒤로가기" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="거래 상세"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_gravity="center" />
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- 거래 정보 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/circle_background"
+                android:padding="16dp"
+                android:backgroundTint="@color/white">
+
+                <!-- 가게명 -->
+                <LinearLayout
+                    style="@style/DetailRowStyle">
+                    <ImageView style="@style/DetailIconStyle" android:src="@drawable/ic_store"/>
+                    <TextView style="@style/DetailLabelStyle" android:text="가게명"/>
+                    <TextView style="@style/DetailValueStyle" android:id="@+id/tv_store_name" tools:text="누크녹"/>
+                </LinearLayout>
+
+                <!-- 총액 -->
+                <LinearLayout
+                    style="@style/DetailRowStyle">
+                    <ImageView style="@style/DetailIconStyle" android:src="@drawable/ic_money"/>
+                    <TextView style="@style/DetailLabelStyle" android:text="총액"/>
+                    <TextView style="@style/DetailValueStyle" android:id="@+id/tv_total_amount" tools:text="₩36,000"/>
+                </LinearLayout>
+
+                <!-- 위치 -->
+                <LinearLayout
+                    style="@style/DetailRowStyle">
+                    <ImageView style="@style/DetailIconStyle" android:src="@drawable/ic_map_pin"/>
+                    <TextView style="@style/DetailLabelStyle" android:text="위치"/>
+                    <TextView style="@style/DetailValueStyle" android:id="@+id/tv_location" tools:text="서울특별시 마포구 성미산로 190-3"/>
+                </LinearLayout>
+
+                <!-- 카테고리 -->
+                <LinearLayout
+                    style="@style/DetailRowStyle">
+                    <ImageView style="@style/DetailIconStyle" android:src="@drawable/ic_category"/>
+                    <TextView style="@style/DetailLabelStyle" android:text="카테고리"/>
+                    <TextView style="@style/DetailValueStyle" android:id="@+id/tv_category" tools:text="음료"/>
+                </LinearLayout>
+                
+                <!-- 메모 -->
+                 <LinearLayout
+                    style="@style/DetailRowStyle" android:layout_marginBottom="0dp">
+                    <ImageView style="@style/DetailIconStyle" android:src="@drawable/ic_memo"/>
+                    <TextView style="@style/DetailLabelStyle" android:text="메모"/>
+                    <TextView style="@style/DetailValueStyle" android:id="@+id/tv_memo" tools:text="메모 없음"/>
+                    <ImageButton
+                         android:id="@+id/btn_edit_memo"
+                         android:layout_width="24dp"
+                         android:layout_height="24dp"
+                         android:src="@drawable/ic_edit"
+                         android:background="?attr/selectableItemBackgroundBorderless"
+                         android:tint="#888" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 구매 품목 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/circle_background"
+                android:padding="16dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+                    <ImageView style="@style/DetailIconStyle" android:src="@drawable/ic_shopping_cart"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="구매 품목"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:layout_marginStart="8dp"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#eee"
+                    android:layout_marginBottom="8dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_items"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/item_transaction_item"
+                    tools:itemCount="5"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="삭제"
+        android:textColor="@color/white"
+        android:background="@drawable/gradient_background"
+        android:layout_margin="16dp" />
+
+</LinearLayout> 

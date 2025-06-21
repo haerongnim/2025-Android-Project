@@ -41,4 +41,16 @@
         android:label="채팅"
         tools:layout="@layout/fragment_chat" />
 
+    <fragment
+        android:id="@+id/navigation_transaction_detail"
+        android:name="com.example.spendy_2.ui.home.TransactionDetailFragment"
+        android:label="거래 상세"
+        tools:layout="@layout/fragment_transaction_detail">
+        
+        <argument
+            android:name="transaction_id"
+            app:argType="string" />
+
+    </fragment>
+
 </navigation> 

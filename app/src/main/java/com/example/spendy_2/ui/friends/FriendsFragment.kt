@@ -18,7 +18,7 @@ import android.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.Button
 import com.example.spendy_2.R
-import androidx.fragment.app.commit
+import androidx.navigation.fragment.findNavController
 
 class FriendsFragment : Fragment() {
 
@@ -120,19 +120,19 @@ class FriendsFragment : Fragment() {
     }
 
     private fun showFriendStats(contact: Contact) {
-        val friendStatsFragment = FriendStatsFragment.newInstance(contact)
-        parentFragmentManager.commit {
-            replace(R.id.nav_host_fragment, friendStatsFragment)
-            addToBackStack(null)
+        val bundle = Bundle().apply {
+            putString("friend_name", contact.name)
+            putString("friend_phone", contact.phone)
         }
+        findNavController().navigate(R.id.navigation_friend_stats, bundle)
     }
 
     private fun showChat(contact: Contact) {
-        val chatFragment = ChatFragment.newInstance(contact)
-        parentFragmentManager.commit {
-            replace(R.id.nav_host_fragment, chatFragment)
-            addToBackStack(null)
+        val bundle = Bundle().apply {
+            putString("friend_name", contact.name)
+            putString("friend_phone", contact.phone)
         }
+        findNavController().navigate(R.id.navigation_chat, bundle)
     }
 
     private fun loadFriendsList() {

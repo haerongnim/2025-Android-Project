@@ -51,7 +51,7 @@
                     android:text="👋 안녕하세요!"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:layout_marginBottom="4dp" />
 
                 <TextView
@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:text="오늘도 영수증을 스캔해서 지출을 관리해보세요"
                     android:textSize="16sp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:alpha="0.9" />
 
             </LinearLayout>

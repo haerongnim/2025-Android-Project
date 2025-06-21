@@ -39,6 +39,7 @@ import kotlinx.coroutines.delay
 import android.app.Dialog
 import android.widget.TextView
 import android.widget.Button
+import androidx.navigation.fragment.findNavController
 
 class HomeFragment : Fragment() {
 
@@ -59,7 +60,10 @@ class HomeFragment : Fragment() {
         val address: String = "",
         val lat: Double = 0.0, // 위도
         val lng: Double = 0.0,  // 경도
-        val category: String = "" // 카테고리 필드 추가
+        val category: String = "", // 카테고리 필드 추가
+        val location: String = "",
+        val memo: String? = null,
+        val imagePath: String? = null
     )
     // 임시 저장 리스트
     private val receiptList = mutableListOf<ReceiptInfo>()
@@ -126,17 +130,24 @@ class HomeFragment : Fragment() {
 
     private fun setupUI() {
         binding.rvRecentTransactions.layoutManager = LinearLayoutManager(context)
-        receiptAdapter = ReceiptAdapter(emptyList()) { docId ->
-            // 삭제 다이얼로그 표시
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle("거래 삭제")
-                .setMessage("이 거래를 삭제하시겠습니까?")
-                .setPositiveButton("삭제") { _, _ ->
-                    deleteReceiptFromFirestore(docId)
-                }
-                .setNegativeButton("취소", null)
-                .show()
-        }
+        receiptAdapter = ReceiptAdapter(
+            emptyList(),
+            { docId ->
+                // 삭제 다이얼로그 표시
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("거래 삭제")
+                    .setMessage("이 거래를 삭제하시겠습니까?")
+                    .setPositiveButton("삭제") { _, _ ->
+                        deleteReceiptFromFirestore(docId)
+                    }
+                    .setNegativeButton("취소", null)
+                    .show()
+            },
+            { receiptWithId ->
+                // 거래 상세 페이지로 이동
+                navigateToTransactionDetail(receiptWithId)
+            }
+        )
         binding.rvRecentTransactions.adapter = receiptAdapter
     }
 
@@ -495,7 +506,10 @@ class HomeFragment : Fragment() {
                                     address = parsedAddress,
                                     lat = finalLat,
                                     lng = finalLng,
-                                    category = category
+                                    category = category,
+                                    location = parsedAddress,
+                                    memo = null,
+                                    imagePath = null
                                 )
                                 saveReceiptToFirestore(receiptInfo)
                                 showReceiptResult(parsedStore, dateStrForDisplay, parsedTotal, parsedAddress, finalLat, finalLng, category, parsedItems, clovaResult)
@@ -510,7 +524,10 @@ class HomeFragment : Fragment() {
                                     address = parsedAddress,
                                     lat = 0.0,
                                     lng = 0.0,
-                                    category = category
+                                    category = category,
+                                    location = parsedAddress,
+                                    memo = null,
+                                    imagePath = null
                                 )
                                 saveReceiptToFirestore(receiptInfo)
                                 showReceiptResult(parsedStore, dateStrForDisplay, parsedTotal, parsedAddress, 0.0, 0.0, category, parsedItems, clovaResult)
@@ -528,7 +545,10 @@ class HomeFragment : Fragment() {
                         address = parsedAddress,
                         lat = 0.0,
                         lng = 0.0,
-                        category = category
+                        category = category,
+                        location = parsedAddress,
+                        memo = null,
+                        imagePath = null
                     )
                     saveReceiptToFirestore(receiptInfo)
                     showReceiptResult(parsedStore, dateStrForDisplay, parsedTotal, parsedAddress, 0.0, 0.0, category, parsedItems, clovaResult)
@@ -965,6 +985,18 @@ class HomeFragment : Fragment() {
         android.util.Log.d("Keyword", "분류 결과: $maxCategory (점수: $maxScore), 입력: $text")
         
         return if (maxScore > 0) maxCategory else "기타"
+    }
+
+    // 거래 상세 페이지로 이동
+    private fun navigateToTransactionDetail(receiptWithId: ReceiptWithId) {
+        val bundle = Bundle().apply {
+            putString("transaction_id", receiptWithId.id)
+        }
+        
+        findNavController().navigate(
+            R.id.navigation_transaction_detail,
+            bundle
+        )
     }
 
     override fun onDestroyView() {

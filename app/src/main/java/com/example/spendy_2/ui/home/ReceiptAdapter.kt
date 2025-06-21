@@ -12,7 +12,8 @@ import com.example.spendy_2.ui.home.HomeFragment.ReceiptWithId
 
 class ReceiptAdapter(
     private var items: List<ReceiptWithId>,
-    private val onDeleteReceipt: (String) -> Unit
+    private val onDeleteReceipt: (String) -> Unit,
+    private val onItemClick: (ReceiptWithId) -> Unit
 ) : RecyclerView.Adapter<ReceiptAdapter.ReceiptViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReceiptViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_receipt, parent, false)
@@ -42,6 +43,12 @@ class ReceiptAdapter(
             tvStoreName.text = info.store
             tvAmount.text = if (info.totalAmount > 0) "${info.totalAmount}원" else "-"
             tvDate.text = dateFormat.format(Date(info.date))
+            
+            // 아이템 클릭 이벤트
+            itemView.setOnClickListener {
+                onItemClick(item)
+            }
+            
             btnDelete.setOnClickListener {
                 onDeleteReceipt(item.id)
             }
