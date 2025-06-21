@@ -90,6 +90,10 @@ dependencies {
     // MPAndroidChart for statistics
     implementation(libs.mpandroidchart)
     
+    // TensorFlow Lite
+    implementation("org.tensorflow:tensorflow-lite:2.10.0")
+    implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
+    
     implementation("com.google.firebase:firebase-firestore-ktx:24.10.0")
     
     testImplementation(libs.junit)

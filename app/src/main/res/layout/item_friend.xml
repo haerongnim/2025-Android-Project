@@ -4,16 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:gravity="center_vertical">
 
+        <!-- 프로필 이미지 -->
         <ImageView
             android:id="@+id/iv_friend_avatar"
             android:layout_width="48dp"
@@ -21,8 +25,11 @@
             android:layout_gravity="center_vertical"
             android:background="@drawable/circle_background"
             android:src="@drawable/ic_person"
+            android:tint="@color/design_default_color_primary"
+            android:padding="12dp"
             tools:ignore="ContentDescription" />
 
+        <!-- 친구 정보 -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -38,53 +45,75 @@
                 android:text="친구 이름"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="4dp"
                 tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/tv_friend_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="온라인"
-                android:textColor="?android:attr/textColorSecondary"
+                android:text="상태 메시지"
+                android:textColor="@android:color/darker_gray"
                 android:textSize="14sp"
+                android:layout_marginBottom="4dp"
                 tools:ignore="HardcodedText" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_friend_total_spent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="₩250,000"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="이번 달"
-                android:textColor="?android:attr/textColorSecondary"
+                android:text="이번 달 지출: ₩0"
                 android:textSize="12sp"
+                android:textColor="@color/design_default_color_primary"
+                android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_add_friend"
+        <!-- 액션 버튼들 -->
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="12dp"
-            android:text="추가" />
+            android:orientation="horizontal"
+            android:layout_marginStart="8dp">
+
+            <!-- 통계 보기 버튼 -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_view_stats"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                app:icon="@drawable/ic_statistics"
+                app:iconTint="@color/design_default_color_primary"
+                app:backgroundTint="@android:color/transparent"
+                app:strokeColor="@color/design_default_color_primary"
+                app:strokeWidth="1dp" />
+
+            <!-- 채팅 버튼 -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_chat"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                app:icon="@drawable/ic_chat"
+                app:iconTint="@color/design_default_color_primary"
+                app:backgroundTint="@android:color/transparent"
+                app:strokeColor="@color/design_default_color_primary"
+                app:strokeWidth="1dp" />
+
+            <!-- 추가 버튼 (친구 추가 시에만 표시) -->
+            <Button
+                android:id="@+id/btn_add_friend"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="추가"
+                android:visibility="gone" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -21,6 +21,11 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         navView.setupWithNavController(navController)
         
+        // 하단 네비게이션 색상 설정
+        navView.setBackgroundColor(resources.getColor(R.color.white))
+        navView.itemIconTintList = resources.getColorStateList(R.color.colorPrimary, theme)
+        navView.itemTextColor = resources.getColorStateList(R.color.colorPrimary, theme)
+        
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)

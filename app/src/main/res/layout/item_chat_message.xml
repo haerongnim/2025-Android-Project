@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingVertical="4dp">
+
+    <!-- 내가 보낸 메시지 -->
+    <LinearLayout
+        android:id="@+id/layout_my_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/chat_bubble_my"
+            android:padding="12dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginEnd="8dp"
+            android:maxWidth="280dp">
+
+            <TextView
+                android:id="@+id/tv_my_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="내가 보낸 메시지입니다."
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/tv_my_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="오후 2:30"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:alpha="0.7"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- 친구가 보낸 메시지 -->
+    <LinearLayout
+        android:id="@+id/layout_friend_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/chat_bubble_friend"
+            android:padding="12dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="60dp"
+            android:maxWidth="280dp">
+
+            <TextView
+                android:id="@+id/tv_friend_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="친구가 보낸 메시지입니다."
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/tv_friend_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="오후 2:31"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="10sp"
+                android:alpha="0.7"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout> 

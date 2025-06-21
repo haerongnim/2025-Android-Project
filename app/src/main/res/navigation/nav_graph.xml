@@ -29,4 +29,16 @@
         android:label="@string/title_friends"
         tools:layout="@layout/fragment_friends" />
 
+    <fragment
+        android:id="@+id/navigation_friend_stats"
+        android:name="com.example.spendy_2.ui.friends.FriendStatsFragment"
+        android:label="친구 통계"
+        tools:layout="@layout/fragment_friend_stats" />
+
+    <fragment
+        android:id="@+id/navigation_chat"
+        android:name="com.example.spendy_2.ui.friends.ChatFragment"
+        android:label="채팅"
+        tools:layout="@layout/fragment_chat" />
+
 </navigation> 

@@ -22,6 +22,7 @@ class StatisticsFragment : Fragment() {
 
     private var _binding: FragmentStatisticsBinding? = null
     private val binding get() = _binding!!
+    private lateinit var categoryStatAdapter: CategoryStatAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,7 +90,8 @@ class StatisticsFragment : Fragment() {
 
     private fun setupRecyclerView() {
         binding.rvCategoryStats.layoutManager = LinearLayoutManager(context)
-        // TODO: 카테고리 통계 어댑터 설정
+        categoryStatAdapter = CategoryStatAdapter()
+        binding.rvCategoryStats.adapter = categoryStatAdapter
     }
 
     private fun loadStatistics() {
@@ -151,37 +153,57 @@ class StatisticsFragment : Fragment() {
         val entries = mutableListOf<PieEntry>()
         if (receipts.isEmpty()) {
             // 임시 데이터
-            entries.add(PieEntry(35f, "음식"))
-            entries.add(PieEntry(25f, "교통"))
-            entries.add(PieEntry(20f, "쇼핑"))
-            entries.add(PieEntry(15f, "엔터테인먼트"))
+            entries.add(PieEntry(35f, "식품"))
+            entries.add(PieEntry(25f, "외식"))
+            entries.add(PieEntry(20f, "음료"))
+            entries.add(PieEntry(15f, "생활용품"))
             entries.add(PieEntry(5f, "기타"))
         } else {
-            // 카테고리 분류(임시: 상호명에 키워드 포함 여부)
+            // 실제 카테고리 필드 사용
             val categoryMap = mutableMapOf<String, Float>()
-            val categories = listOf("음식", "교통", "쇼핑", "엔터테인먼트", "기타")
-            receipts.forEach { r ->
-                val cat = when {
-                    r.store.contains("카페") || r.store.contains("식당") -> "음식"
-                    r.store.contains("버스") || r.store.contains("지하철") -> "교통"
-                    r.store.contains("마트") || r.store.contains("쇼핑") -> "쇼핑"
-                    r.store.contains("영화") || r.store.contains("노래방") -> "엔터테인먼트"
-                    else -> "기타"
-                }
-                val amt = r.totalAmount.toFloat()
-                categoryMap[cat] = categoryMap.getOrDefault(cat, 0f) + amt
+            val categoryCount = mutableMapOf<String, Int>()
+            
+            receipts.forEach { receipt ->
+                val category = receipt.category.ifEmpty { "기타" }
+                val amount = receipt.totalAmount.toFloat()
+                
+                categoryMap[category] = categoryMap.getOrDefault(category, 0f) + amount
+                categoryCount[category] = categoryCount.getOrDefault(category, 0) + 1
             }
-            categoryMap.forEach { (cat, amt) ->
-                entries.add(PieEntry(amt, cat))
+            
+            // 카테고리별 통계 로그
+            android.util.Log.d("Statistics", "카테고리 통계:")
+            categoryMap.forEach { (category, totalAmount) ->
+                val count = categoryCount[category] ?: 0
+                android.util.Log.d("Statistics", "$category: ${String.format("%,.0f", totalAmount)}원 ($count)건")
             }
+            
+            categoryMap.forEach { (category, amount) ->
+                entries.add(PieEntry(amount, category))
+            }
+            
+            // 어댑터 업데이트
+            val totalAmount = categoryMap.values.sum()
+            val categoryStats = categoryMap.map { (category, amount) ->
+                val percentage = if (totalAmount > 0) (amount / totalAmount) * 100 else 0f
+                val count = categoryCount[category] ?: 0
+                CategoryStat(category, amount, percentage, count)
+            }.sortedByDescending { it.amount }
+            
+            categoryStatAdapter.updateData(categoryStats)
         }
+        
         val dataSet = PieDataSet(entries, "카테고리")
         dataSet.colors = listOf(
-            Color.rgb(64, 89, 128),
-            Color.rgb(149, 165, 124),
-            Color.rgb(217, 184, 162),
-            Color.rgb(191, 134, 134),
-            Color.rgb(179, 102, 134)
+            Color.rgb(64, 89, 128),   // 식품
+            Color.rgb(149, 165, 124), // 외식
+            Color.rgb(217, 184, 162), // 음료
+            Color.rgb(191, 134, 134), // 생활용품
+            Color.rgb(179, 102, 134), // 의류
+            Color.rgb(255, 159, 64),  // 전자기기
+            Color.rgb(255, 99, 132),  // 뷰티
+            Color.rgb(153, 102, 255), // 명품
+            Color.rgb(201, 203, 207)  // 기타
         )
         dataSet.valueTextSize = 12f
         dataSet.valueTextColor = Color.WHITE

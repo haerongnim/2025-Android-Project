@@ -18,6 +18,7 @@ import android.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.Button
 import com.example.spendy_2.R
+import androidx.fragment.app.commit
 
 class FriendsFragment : Fragment() {
 
@@ -46,13 +47,23 @@ class FriendsFragment : Fragment() {
         setupSearchFunction()
         setupClickListeners()
         checkContactsPermissionAndLoad()
+        loadMockFriends() // 임시 친구 데이터 로드
     }
 
     private fun setupRecyclerView() {
         binding.rvFriends.layoutManager = LinearLayoutManager(context)
-        friendAdapter = FriendAdapter(addedFriendsList) { contact ->
-            // 친구 목록에서의 추가 버튼은 동작하지 않도록 빈 람다 전달
-        }
+        friendAdapter = FriendAdapter(
+            addedFriendsList,
+            onAddFriendClick = { contact ->
+                // 친구 목록에서의 추가 버튼은 동작하지 않도록 빈 람다 전달
+            },
+            onViewStatsClick = { contact ->
+                showFriendStats(contact)
+            },
+            onChatClick = { contact ->
+                showChat(contact)
+            }
+        )
         binding.rvFriends.adapter = friendAdapter
     }
 
@@ -108,6 +119,22 @@ class FriendsFragment : Fragment() {
         dialog.show()
     }
 
+    private fun showFriendStats(contact: Contact) {
+        val friendStatsFragment = FriendStatsFragment.newInstance(contact)
+        parentFragmentManager.commit {
+            replace(R.id.nav_host_fragment, friendStatsFragment)
+            addToBackStack(null)
+        }
+    }
+
+    private fun showChat(contact: Contact) {
+        val chatFragment = ChatFragment.newInstance(contact)
+        parentFragmentManager.commit {
+            replace(R.id.nav_host_fragment, chatFragment)
+            addToBackStack(null)
+        }
+    }
+
     private fun loadFriendsList() {
         // TODO: Firebase에서 친구 목록 로드
         // 임시로 빈 목록 표시
@@ -152,6 +179,20 @@ class FriendsFragment : Fragment() {
             }
         }
         // 친구 목록만 표시하므로 어댑터 갱신은 필요 없음
+    }
+
+    private fun loadMockFriends() {
+        // 임시 친구 데이터 로드
+        addedFriendsList.clear()
+        addedFriendsList.add(Contact("김민수", "010-1234-5678"))
+        addedFriendsList.add(Contact("이지영", "010-2345-6789"))
+        addedFriendsList.add(Contact("박준호", "010-3456-7890"))
+        addedFriendsList.add(Contact("최수진", "010-4567-8901"))
+        addedFriendsList.add(Contact("정현우", "010-5678-9012"))
+        addedFriendsList.add(Contact("한소영", "010-6789-0123"))
+        addedFriendsList.add(Contact("임태현", "010-7890-1234"))
+        addedFriendsList.add(Contact("송미라", "010-8901-2345"))
+        friendAdapter.updateData(addedFriendsList)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
