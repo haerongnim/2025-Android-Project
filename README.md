@@ -8,9 +8,9 @@
 ### 📄 프로젝트 상세 보고서 (PDF)
 > **아래 배지나 이미지를 클릭**하면 상세 PDF 문서를 확인하실 수 있습니다.
 
-[![View PDF](https://img.shields.io/badge/View-Project_PDF-red?style=for-the-badge&logo=adobeacrobatreader)](https://github.com/haerongnim/2025-Android-Project/blob/main/SPENDY_final.pdf)
+[![View PDF](https://img.shields.io/badge/View-Project_PDF-red?style=for-the-badge&logo=adobeacrobatreader)](https://github.com/haerongnim/2025-Android-Project/SPENDY_final.pdf)
 
-[<img src="./pdf_capture.png" width="80%" alt="PDF 미리보기">](https://github.com/haerongnim/2025-Android-Project/blob/main/SPENDY_final.pdf)
+[<img src="./pdf_capture.png" width="80%" alt="PDF 미리보기">](https://github.com/haerongnim/2025-Android-Project/SPENDY_final.pdf)
 
 ---
 
