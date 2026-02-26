@@ -1,7 +1,7 @@
 # 📱 Spendy - 영수증 기반 가계부 Android 앱
 
 ### 소개
-**Spendy 2**는 영수증을 촬영하거나 이미지를 업로드하면 **OCR(문자인식)** 및 **AI 분류(TensorFlow Lite, KcELECTRA)**를 통해 자동으로 거래 내역을 추출하고, 카테고리별 통계, 지도 기반 위치, 친구와의 정산 등 다양한 기능을 제공하는 스마트 가계부 앱입니다.
+**Spendy**는 영수증을 촬영하거나 이미지를 업로드하면 **OCR(문자인식) 및 AI 분류(TensorFlow Lite, KcELECTRA)** 를 통해 자동으로 거래 내역을 추출하고, 카테고리별 통계, 지도 기반 위치, 친구와의 정산 등 다양한 기능을 제공하는 스마트 가계부 앱입니다.
 
 ---
 
@@ -10,7 +10,7 @@
 
 [![View PDF](https://img.shields.io/badge/View-Project_PDF-red?style=for-the-badge&logo=adobeacrobatreader)](https://github.com/haerongnim/2025-Android-Project/SPENDY_final.pdf)
 
-[<img src="./pdf_capture.png" width="80%" alt="PDF 미리보기">](https://github.com/haerongnim/2025-Android-Project/SPENDY_final.pdf)
+[<img src="./pdf_preview.png" width="80%" alt="PDF 미리보기">](https://github.com/haerongnim/2025-Android-Project/SPENDY_final.pdf)
 
 ---
 
