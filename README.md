@@ -14,6 +14,7 @@ ___
 - 통계/차트: 카테고리별, 월별 소비 통계 시각화
 - 친구 기능: 친구 추가, 채팅, 정산 등
 ___
+<embed src="./SPENDY_final.pdf" append="true" width="100%" height="500px" type="application/pdf">
 ### 폴더 구조 ###
 <pre>
 app/
